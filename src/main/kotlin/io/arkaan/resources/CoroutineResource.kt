@@ -2,6 +2,7 @@ package io.arkaan.resources
 
 import io.arkaan.db.repository.ReqresClient
 import kotlinx.coroutines.*
+import java.util.logging.Logger
 import javax.ws.rs.*
 import javax.ws.rs.container.AsyncResponse
 import javax.ws.rs.container.Suspended
@@ -13,6 +14,8 @@ class CoroutineResource(
     private val reqresClient: ReqresClient
 ) {
 
+    private val logger: Logger = Logger.getLogger("resource")
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     fun hello(@Suspended asyncResponse: AsyncResponse) {
@@ -23,7 +26,7 @@ class CoroutineResource(
             val random = async { reqresClient.getRandomSync() }
             val combine = awaitAll(user, random)
             asyncResponse.resume(combine)
-            println("total (coroutine): ${System.currentTimeMillis() - start}")
+            logger.info("total (coroutine): ${System.currentTimeMillis() - start} ms")
         }
     }
 }

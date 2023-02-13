@@ -1,0 +1,7 @@
+mongodbConnection:
+  credentials:
+    username: "test"
+    password: "test"
+  database: "hello"
+jerseyClient:
+  timeout: 3000ms

@@ -8,6 +8,11 @@ import javax.ws.rs.container.AsyncResponse
 import javax.ws.rs.container.Suspended
 import javax.ws.rs.core.MediaType
 
+/**
+ * Resource class for mapping "/coroutine" path
+ * Suspended is used to do asynchronous
+ * response processing
+ */
 @Path("/coroutine")
 class CoroutineResource(
     private val coroutineScope: CoroutineScope,
@@ -23,7 +28,7 @@ class CoroutineResource(
         coroutineScope.launch {
             val start = System.currentTimeMillis()
             val user = async { reqresClient.getUserSync() }
-            val random = async { reqresClient.getRandomSync() }
+            val random = async { reqresClient.getRandomSync(null) }
             val combine = awaitAll(user, random)
             asyncResponse.resume(combine)
             logger.info("total (coroutine): ${System.currentTimeMillis() - start} ms")

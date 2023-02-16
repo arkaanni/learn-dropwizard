@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ArrayNode
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.util.logging.Logger
 import javax.ws.rs.client.Client
 import javax.ws.rs.core.MediaType
@@ -63,6 +65,18 @@ class ReqresClient(private val client: Client) {
         return Single.create {
             val response = getUserSync()
             it.onSuccess(response)
+        }
+    }
+
+    /**
+     * Flow is cold stream similar to Observable in RxJava
+     */
+    fun getRandomListFlow(): Flow<JsonNode> {
+        val response = getRandomSync(null)?.get("data") as ArrayNode
+        return flow {
+            for (data in response) {
+                emit(data)
+            }
         }
     }
 }
